@@ -25,12 +25,13 @@
 	//UILabel *imageLabel1;
 	//UILabel *imageLabel2;
 	//UILabel *imageLabel3;
+	UITableView *tableView;
 	BOOL failed;
 	
 }
 - (IBAction)simpleURLFetch:(id)sender;
-@property (retain, nonatomic) ASIHTTPRequest *request;
 
-- (IBAction)fetchThreeImages:(id)sender;
+@property(nonatomic, retain) IBOutlet UITableView *tableView;
+@property (retain, nonatomic) ASIHTTPRequest *request;
 
 @end

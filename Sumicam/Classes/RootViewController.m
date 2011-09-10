@@ -24,6 +24,8 @@
 
 @implementation RootViewController
 
+@synthesize tableView;
+
 #pragma mark -
 #pragma mark View lifecycle
 
@@ -208,20 +210,20 @@
 - (void)imageFetchComplete:(ASIHTTPRequest *)request
 {
 	NSLog(@"imageFetchComplete: %@", [request downloadDestinationPath] );
-	/*
+	
 	UIImage *img = [UIImage imageWithContentsOfFile:[request downloadDestinationPath]];
 	if (img) {
-		if ([imageView1 image]) {
-			if ([imageView2 image]) {
-				[imageView3 setImage:img];
-			} else {
-				[imageView2 setImage:img];
-			}
-		} else {
-			[imageView1 setImage:img];
-		}
+		UITableViewCell *cell;
+		cell = [tableView dequeueReusableCellWithIdentifier:@"ImagesCell"];
+
+		if (!cell) {
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ImagesCell"] autorelease];
+		}	
+
+		cell.imageView.image = img;
+		NSLog(@"cell image: %@", img );
 	}
-	*/
+	
 }
 
 - (void)imageFetchFailed:(ASIHTTPRequest *)request
