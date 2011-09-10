@@ -8,6 +8,7 @@
 
 #import "RootViewController.h"
 #import "ASIHTTPRequest.h"
+//#import "SBJson.h"
 
 @implementation RootViewController
 
@@ -162,6 +163,16 @@
 	if (!error) {
 		NSString *response = [request responseString];
 		NSLog(@"%@",[request responseString]);
+		// Create a dictionary from the JSON string
+		NSDictionary *results = [response JSONValue];
+		for (NSDictionary *file in results)
+		{
+			// Get name and url of the image
+			NSString *fileName = [file objectForKey:@"fileName"];
+			NSString *fileUrl = [file objectForKey:@"fileURL"];
+			NSLog(@"%@", fileUrl);
+		}
+		
 	}
 		
 }
