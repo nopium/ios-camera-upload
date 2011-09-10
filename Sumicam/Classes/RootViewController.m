@@ -8,11 +8,21 @@
 
 #import "RootViewController.h"
 #import "ASIHTTPRequest.h"
-//#import "SBJson.h"
+#import "SBJson.h"
+
+#import "ASIHTTPRequest.h"
+#import "ASINetworkQueue.h"
+//#import "InfoCell.h"
+//#import "ToggleCell.h"
+
+// Private stuff
+@interface RootViewController ()
+- (void)imageFetchComplete:(ASIHTTPRequest *)request;
+- (void)imageFetchFailed:(ASIHTTPRequest *)request;
+@end
+
 
 @implementation RootViewController
-
-
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -165,16 +175,64 @@
 		NSLog(@"%@",[request responseString]);
 		// Create a dictionary from the JSON string
 		NSDictionary *results = [response JSONValue];
+		
+		if (!networkQueue) {
+			networkQueue = [[ASINetworkQueue alloc] init];	
+		}
+		failed = NO;
+		[networkQueue reset];
+		[networkQueue setRequestDidFinishSelector:@selector(imageFetchComplete:)];
+		[networkQueue setRequestDidFailSelector:@selector(imageFetchFailed:)];
+		[networkQueue setDelegate:self];
+		//ASIHTTPRequest *request;
+		
 		for (NSDictionary *file in results)
 		{
 			// Get name and url of the image
 			NSString *fileName = [file objectForKey:@"fileName"];
-			NSString *fileUrl = [file objectForKey:@"fileURL"];
-			NSLog(@"%@", fileUrl);
+			NSString *fileURL = [file objectForKey:@"fileURL"];
+			NSLog(@"%@", fileURL);
+			
+			request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString: fileURL ]];
+			[request setDownloadDestinationPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: fileName ]];
+			
+			//[request setUserInfo:[NSDictionary dictionaryWithObject:@"request1" forKey:@"name"]];
+			[networkQueue addOperation:request];
+			NSLog(@"added %@", fileURL);
 		}
-		
+		[networkQueue go];
+		NSLog(@"networkQueue go");
 	}
-		
+}
+
+- (void)imageFetchComplete:(ASIHTTPRequest *)request
+{
+	NSLog(@"imageFetchComplete: %@", [request downloadDestinationPath] );
+	/*
+	UIImage *img = [UIImage imageWithContentsOfFile:[request downloadDestinationPath]];
+	if (img) {
+		if ([imageView1 image]) {
+			if ([imageView2 image]) {
+				[imageView3 setImage:img];
+			} else {
+				[imageView2 setImage:img];
+			}
+		} else {
+			[imageView1 setImage:img];
+		}
+	}
+	*/
+}
+
+- (void)imageFetchFailed:(ASIHTTPRequest *)request
+{
+	if (!failed) {
+		if ([[request error] domain] != NetworkRequestErrorDomain || [[request error] code] != ASIRequestCancelledErrorType) {
+			UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:@"Download failed" message:@"Failed to download images" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
+			[alertView show];
+		}
+		failed = YES;
+	}
 }
 
 #pragma mark -
@@ -194,6 +252,8 @@
 
 
 - (void)dealloc {
+	[networkQueue reset];
+	[networkQueue release];
     [super dealloc];
 }
 
