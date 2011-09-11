@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 @class ASIHTTPRequest;
 @class ASINetworkQueue;
+@class ASIFormDataRequest;
 
 @interface RootViewController : UITableViewController {
 	ASIHTTPRequest *request;
+	ASIFormDataRequest *requestForm;
 	ASINetworkQueue *networkQueue;
 	
 	UITableView *tableView;
@@ -24,4 +26,5 @@
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) ASIHTTPRequest *request;
 @property (retain) NSMutableArray *imagesList;
+@property (retain, nonatomic) ASIFormDataRequest *requestForm;
 @end

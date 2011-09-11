@@ -11,22 +11,25 @@
 #import "SBJson.h"
 #import "ASIHTTPRequest.h"
 #import "ASINetworkQueue.h"
-
+#import "ASIFormDataRequest.h"
 
 // Private stuff
 @interface RootViewController ()
 - (void)imageFetchComplete:(ASIHTTPRequest *)request;
 - (void)imageFetchFailed:(ASIHTTPRequest *)request;
 - (void)presentImagePickerController:(UIImagePickerController *)imagePickerController;
-
+- (void)uploadFailed:(ASIHTTPRequest *)theRequest;
+- (void)uploadFinished:(ASIHTTPRequest *)theRequest;
 @end
 
 
 @implementation RootViewController
 
 @synthesize request;
+@synthesize requestForm;
 @synthesize tableView;
 @synthesize imagesList;
+
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -287,10 +290,33 @@
 	[imageData writeToFile:filePath atomically:NO];
 	NSLog(@"Saved to %@", filePath);
 	[imagesList addObject:filePath];
-	[tableView reloadData];
-	[picker dismissModalViewControllerAnimated:YES];
+
+	NSString *url = @"http://www.sumilux.com/mia/?a=showUploadForm";
+	ASIFormDataRequest *requestForm = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+	[requestForm setFile:filePath forKey:@"file"];
+	[requestForm setDelegate:self];
+	[requestForm setDidFailSelector:@selector(uploadFailed:)];
+	[requestForm setDidFinishSelector:@selector(uploadFinished:)];
+	NSLog(@"starting upload....");
+	[requestForm startAsynchronous];
+	
+	//[tableView reloadData];
+	//[picker dismissModalViewControllerAnimated:YES];
 
 }
+
+- (void)uploadFailed:(ASIHTTPRequest *)theRequest
+{
+	//[resultView setText:[NSString stringWithFormat:@"Request failed:\r\n%@",[[theRequest error] localizedDescription]]];
+	NSLog(@"Upload failed: %@",[[theRequest error] localizedDescription]);
+}
+
+- (void)uploadFinished:(ASIHTTPRequest *)theRequest
+{
+	//[resultView setText:[NSString stringWithFormat:@"Finished uploading %llu bytes of data",[theRequest postLength]]];
+	NSLog(@"Upload finished! %llu bytes of data",[theRequest postLength]);
+}
+
 
 -(void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
 	[picker dismissModalViewControllerAnimated:YES];
@@ -317,6 +343,11 @@
 	[networkQueue release];
 	[tableView release];
 	[imagesList release];
+	[request clearDelegatesAndCancel];
+    [request release];
+	[requestForm clearDelegatesAndCancel];
+    [requestForm release];
+
     [super dealloc];
 }
 
