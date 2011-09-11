@@ -14,24 +14,14 @@
 	ASIHTTPRequest *request;
 	ASINetworkQueue *networkQueue;
 	
-	//UIImageView *imageView1;
-	//UIImageView *imageView2;
-	//UIImageView *imageView3;
-	//UIProgressView *progressIndicator;
-	//UISwitch *accurateProgress;
-	//UIProgressView *imageProgressIndicator1;
-	//UIProgressView *imageProgressIndicator2;
-	//UIProgressView *imageProgressIndicator3;
-	//UILabel *imageLabel1;
-	//UILabel *imageLabel2;
-	//UILabel *imageLabel3;
 	UITableView *tableView;
 	BOOL failed;
+	NSMutableArray *imagesList;
 	
 }
 - (IBAction)simpleURLFetch:(id)sender;
 
-@property(nonatomic, retain) IBOutlet UITableView *tableView;
+@property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) ASIHTTPRequest *request;
-
+@property (retain) NSMutableArray *imagesList;
 @end

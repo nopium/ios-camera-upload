@@ -9,11 +9,9 @@
 #import "RootViewController.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
-
 #import "ASIHTTPRequest.h"
 #import "ASINetworkQueue.h"
-//#import "InfoCell.h"
-//#import "ToggleCell.h"
+
 
 // Private stuff
 @interface RootViewController ()
@@ -24,7 +22,9 @@
 
 @implementation RootViewController
 
+@synthesize request;
 @synthesize tableView;
+@synthesize imagesList;
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -32,7 +32,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	//[self simpleURLFetch];
+	imagesList = [[NSMutableArray alloc] init];
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -79,14 +79,14 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return [imagesList count];
 }
 
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *CellIdentifier = @"Cell";
+    NSLog(@"cell at %d", indexPath.row);
+    static NSString *CellIdentifier = @"ImagesCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -94,7 +94,24 @@
     }
     
 	// Configure the cell.
-
+	NSLog(@"cell image: %@", [imagesList objectAtIndex:indexPath.row] );
+	cell.textLabel.text=[imagesList objectAtIndex:indexPath.row];
+	UIImage *img = [UIImage imageWithContentsOfFile:[imagesList objectAtIndex:indexPath.row]];
+	/*
+	if (img) {
+		//UITableViewCell *cell;
+		static NSString *CellIdentifier = @"ImagesCell";
+		
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+		if (cell == nil) {
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+		}
+		cell.textLabel.text = @"test";
+		cell.imageView.image = img;
+		//[tableView insertRowsAtIndexPaths: withRowAnimation:<#(UITableViewRowAnimation)animation#>]
+		NSLog(@"cell image: %@", img );
+	}
+	 */
     return cell;
 }
 
@@ -209,20 +226,9 @@
 
 - (void)imageFetchComplete:(ASIHTTPRequest *)request
 {
-	NSLog(@"imageFetchComplete: %@", [request downloadDestinationPath] );
-	
-	UIImage *img = [UIImage imageWithContentsOfFile:[request downloadDestinationPath]];
-	if (img) {
-		UITableViewCell *cell;
-		cell = [tableView dequeueReusableCellWithIdentifier:@"ImagesCell"];
-
-		if (!cell) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ImagesCell"] autorelease];
-		}	
-
-		cell.imageView.image = img;
-		NSLog(@"cell image: %@", img );
-	}
+	[imagesList addObject: [request downloadDestinationPath]];
+	NSLog(@"imageFetchComplete: %d %@", [imagesList count], [request downloadDestinationPath] );
+	[tableView reloadData];
 	
 }
 
@@ -256,9 +262,10 @@
 - (void)dealloc {
 	[networkQueue reset];
 	[networkQueue release];
+	[tableView release];
+	[imagesList release];
     [super dealloc];
 }
 
-@synthesize request;
 @end
 
