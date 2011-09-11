@@ -265,7 +265,7 @@
 	
 	
 	[self presentImagePickerController:imagePickerController];
-	//[imagePickerController release];	
+	[imagePickerController release];	
 	
 }
 
@@ -291,7 +291,7 @@
 	NSLog(@"Saved to %@", filePath);
 	[imagesList addObject:filePath];
 
-	NSString *url = @"http://www.sumilux.com/mia/?a=showUploadForm";
+	NSString *url = @"http://www.sumilux.com/mia/?a=doUpload";
 	ASIFormDataRequest *requestForm = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
 	[requestForm setFile:filePath forKey:@"file"];
 	[requestForm setDelegate:self];
@@ -307,14 +307,15 @@
 
 - (void)uploadFailed:(ASIHTTPRequest *)theRequest
 {
-	//[resultView setText:[NSString stringWithFormat:@"Request failed:\r\n%@",[[theRequest error] localizedDescription]]];
+//	[imagePickerController dismissModalViewControllerAnimated:YES];
 	NSLog(@"Upload failed: %@",[[theRequest error] localizedDescription]);
 }
 
 - (void)uploadFinished:(ASIHTTPRequest *)theRequest
 {
-	//[resultView setText:[NSString stringWithFormat:@"Finished uploading %llu bytes of data",[theRequest postLength]]];
 	NSLog(@"Upload finished! %llu bytes of data",[theRequest postLength]);
+//	[imagePickerController dismissModalViewControllerAnimated:YES];
+	[tableView reloadData];
 }
 
 
