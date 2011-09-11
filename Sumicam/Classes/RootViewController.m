@@ -17,6 +17,8 @@
 @interface RootViewController ()
 - (void)imageFetchComplete:(ASIHTTPRequest *)request;
 - (void)imageFetchFailed:(ASIHTTPRequest *)request;
+- (void)presentImagePickerController:(UIImagePickerController *)imagePickerController;
+
 @end
 
 
@@ -33,6 +35,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	imagesList = [[NSMutableArray alloc] init];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
+																							target:self 
+																							action:@selector(addPhoto)] autorelease];	
+	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -241,6 +247,39 @@
 		}
 		failed = YES;
 	}
+}
+
+#pragma mark -
+#pragma mark Camera
+-(void) addPhoto
+{
+	
+	UIImagePickerController *imagePickerController;
+	imagePickerController = [[UIImagePickerController alloc] init];
+	imagePickerController.delegate = self;
+	
+	imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+	
+	
+	[self presentImagePickerController:imagePickerController];
+	//[imagePickerController release];	
+	
+}
+
+- (void)presentImagePickerController:(UIImagePickerController *)imagePickerController {
+		[self presentModalViewController:imagePickerController animated:YES];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+	UIImage *choosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+	choosenImage = [choosenImage imageByScalingAndCroppingForSize:CGSizeMake(320, 480)];
+	//NSData *imageData = UIImageJPEGRepresentation(chooseImage, 0.9);
+	
+
+}
+
+-(void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+	[picker dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -
