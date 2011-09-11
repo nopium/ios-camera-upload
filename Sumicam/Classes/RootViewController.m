@@ -274,7 +274,20 @@
 	UIImage *choosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
 	NSLog(@"chosenImage: %@", choosenImage);
 	choosenImage = [choosenImage imageByScalingAndCroppingForSize:CGSizeMake(320, 480)];
-	//NSData *imageData = UIImageJPEGRepresentation(chooseImage, 0.9);
+	
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+	
+	NSString *fileName = [NSString stringWithFormat:@"photo-%@.jpg", [dateFormatter stringFromDate:[NSDate date]]];
+	NSString *filePath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: fileName ];
+	[dateFormatter release];
+
+	NSData *imageData = UIImageJPEGRepresentation(choosenImage, 0.9);
+	[imageData writeToFile:filePath atomically:NO];
+	NSLog(@"Saved to %@", filePath);
+	[imagesList addObject:filePath];
+	[tableView reloadData];
 	[picker dismissModalViewControllerAnimated:YES];
 
 }
