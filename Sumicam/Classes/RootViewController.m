@@ -257,7 +257,7 @@
 -(void) addPhoto
 {
 	
-	UIImagePickerController *imagePickerController;
+	//UIImagePickerController *imagePickerController;
 	imagePickerController = [[UIImagePickerController alloc] init];
 	imagePickerController.delegate = self;
 	
@@ -307,14 +307,14 @@
 
 - (void)uploadFailed:(ASIHTTPRequest *)theRequest
 {
-//	[imagePickerController dismissModalViewControllerAnimated:YES];
+	[imagePickerController dismissModalViewControllerAnimated:YES];
 	NSLog(@"Upload failed: %@",[[theRequest error] localizedDescription]);
 }
 
 - (void)uploadFinished:(ASIHTTPRequest *)theRequest
 {
 	NSLog(@"Upload finished! %llu bytes of data",[theRequest postLength]);
-//	[imagePickerController dismissModalViewControllerAnimated:YES];
+	[imagePickerController dismissModalViewControllerAnimated:YES];
 	[tableView reloadData];
 }
 

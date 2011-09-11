@@ -19,7 +19,7 @@
 	UITableView *tableView;
 	BOOL failed;
 	NSMutableArray *imagesList;
-	
+	UIImagePickerController *imagePickerController;
 }
 - (IBAction)simpleURLFetch:(id)sender;
 
