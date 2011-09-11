@@ -57,6 +57,7 @@
 							<int key="NSfFlags">16</int>
 						</object>
 						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Get Photos</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="993050466">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
