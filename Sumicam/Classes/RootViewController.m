@@ -95,23 +95,15 @@
     
 	// Configure the cell.
 	NSLog(@"cell image: %@", [imagesList objectAtIndex:indexPath.row] );
-	cell.textLabel.text=[imagesList objectAtIndex:indexPath.row];
+	//cell.textLabel.text=[imagesList objectAtIndex:indexPath.row];
 	UIImage *img = [UIImage imageWithContentsOfFile:[imagesList objectAtIndex:indexPath.row]];
-	/*
+	
 	if (img) {
-		//UITableViewCell *cell;
-		static NSString *CellIdentifier = @"ImagesCell";
-		
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-		if (cell == nil) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-		}
-		cell.textLabel.text = @"test";
+		//cell.textLabel.text = @"test";
 		cell.imageView.image = img;
-		//[tableView insertRowsAtIndexPaths: withRowAnimation:<#(UITableViewRowAnimation)animation#>]
 		NSLog(@"cell image: %@", img );
 	}
-	 */
+	
     return cell;
 }
 
