@@ -201,8 +201,8 @@
 		{
 			// Get name and url of the image
 			NSString *fileName = [file objectForKey:@"fileName"];
-			NSString *fileURL = [file objectForKey:@"fileURL"];
-			NSLog(@"%@", fileURL);
+			NSString *fileURL = [[file objectForKey:@"fileURL"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSLog(@"fileURL: %@", fileURL);
 			
 			request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString: fileURL ]];
 			[request setDownloadDestinationPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: fileName ]];
