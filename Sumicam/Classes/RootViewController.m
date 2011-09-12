@@ -282,7 +282,7 @@
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
 	
-	NSString *fileName = [NSString stringWithFormat:@"photo-%@.jpg", [dateFormatter stringFromDate:[NSDate date]]];
+	NSString *fileName = [[[NSString stringWithFormat:@"photo-%@.jpg", [dateFormatter stringFromDate:[NSDate date]]] stringByReplacingOccurrencesOfString:@" " withString:@"_"] stringByReplacingOccurrencesOfString:@":" withString:@""];
 	NSString *filePath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: fileName ];
 	[dateFormatter release];
 
