@@ -205,7 +205,7 @@
 		[networkQueue setRequestDidFinishSelector:@selector(imageFetchComplete:)];
 		[networkQueue setRequestDidFailSelector:@selector(imageFetchFailed:)];
 		[networkQueue setDelegate:self];
-		//ASIHTTPRequest *request;
+		ASIHTTPRequest *request;
 		
 		for (NSDictionary *file in results)
 		{
