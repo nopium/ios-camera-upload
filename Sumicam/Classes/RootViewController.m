@@ -160,10 +160,15 @@
 	UIImage *detailImage = [UIImage imageWithContentsOfFile:[imagesList objectAtIndex:indexPath.row]];
 	NSLog(@"selected: %@ : %@", detailImage, [imagesList objectAtIndex:indexPath.row]);
 	ImageViewController *imageViewController = [[ImageViewController alloc] initWithNibName:@"ImageViewController" bundle:nil];
-	imageViewController.selectedImageView.image = detailImage;
-	NSLog(@"imageViewController.selectedImageView.image: %@", imageViewController.selectedImageView.image);
-	// Pass the selected object to the new view controller.
+	
+	self.navigationItem.backBarButtonItem =[[[UIBarButtonItem alloc] initWithTitle:@"Back" style: UIBarButtonItemStyleBordered target:nil action:nil] autorelease];
 	[self.navigationController pushViewController:imageViewController animated:YES];
+	imageViewController.selectedImageView.image = detailImage;
+	
+	[imageViewController setTitle: @"View Image" ];
+	//[imageViewController ];
+	// Pass the selected object to the new view controller.
+	
 	[imageViewController release];
 }
 
@@ -253,6 +258,7 @@
 - (void)viewDidUnload {
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
+	[imagesList release]; imagesList = nil;
 }
 
 
