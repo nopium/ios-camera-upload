@@ -7,6 +7,7 @@
 //
 
 #import "RootViewController.h"
+#import "ImageViewController.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 #import "ASIHTTPRequest.h"
@@ -87,12 +88,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cell at %d", indexPath.row);
     static NSString *CellIdentifier = @"ImagesCell";
-    
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-    
+
 	// Configure the cell.
 	NSLog(@"cell image: %@", [imagesList objectAtIndex:indexPath.row] );
 	//cell.textLabel.text=[imagesList objectAtIndex:indexPath.row];
@@ -103,7 +104,7 @@
 		cell.imageView.image = img;
 		NSLog(@"cell image: %@", img );
 	}
-	
+
     return cell;
 }
 
@@ -149,17 +150,21 @@
 
 
 #pragma mark -
-#pragma mark Table view delegate
+#pragma mark Table view Select Item
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
+	/**
+	 * UIViewController* vc = nil;
 	 */
+	UIImage *detailImage = [UIImage imageWithContentsOfFile:[imagesList objectAtIndex:indexPath.row]];
+	NSLog(@"selected: %@ : %@", detailImage, [imagesList objectAtIndex:indexPath.row]);
+	ImageViewController *imageViewController = [[ImageViewController alloc] initWithNibName:@"ImageViewController" bundle:nil];
+	imageViewController.selectedImageView.image = detailImage;
+	NSLog(@"imageViewController.selectedImageView.image: %@", imageViewController.selectedImageView.image);
+	// Pass the selected object to the new view controller.
+	[self.navigationController pushViewController:imageViewController animated:YES];
+	[imageViewController release];
 }
 
 #pragma mark -
@@ -256,6 +261,7 @@
 	[networkQueue release];
 	[tableView release];
 	[imagesList release];
+	[request release];
     [super dealloc];
 }
 

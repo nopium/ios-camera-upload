@@ -15,6 +15,8 @@
 		28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD735F0D9D9599002E5188 /* MainWindow.xib */; };
 		28C286E10D94DF7D0034E888 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
 		28F335F11007B36200424DE2 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* RootViewController.xib */; };
+		522D1F411421BA9900A3AAAF /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 522D1F3F1421BA9900A3AAAF /* ImageViewController.m */; };
+		522D1F421421BA9900A3AAAF /* ImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 522D1F401421BA9900A3AAAF /* ImageViewController.xib */; };
 		52D05087141B9EEF000676CE /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D05074141B9EEF000676CE /* ASIAuthenticationDialog.m */; };
 		52D05088141B9EEF000676CE /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D05077141B9EEF000676CE /* ASIDataCompressor.m */; };
 		52D05089141B9EEF000676CE /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D05079141B9EEF000676CE /* ASIDataDecompressor.m */; };
@@ -55,6 +57,9 @@
 		28C286E00D94DF7D0034E888 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		28F335F01007B36200424DE2 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		522D1F3E1421BA9900A3AAAF /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageViewController.h; path = ../ImageViewController.h; sourceTree = "<group>"; };
+		522D1F3F1421BA9900A3AAAF /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageViewController.m; path = ../ImageViewController.m; sourceTree = "<group>"; };
+		522D1F401421BA9900A3AAAF /* ImageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageViewController.xib; sourceTree = "<group>"; };
 		52D05073141B9EEF000676CE /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		52D05074141B9EEF000676CE /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		52D05075141B9EEF000676CE /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -134,6 +139,8 @@
 				52D05066141B9ED3000676CE /* asfetcher */,
 				28C286DF0D94DF7D0034E888 /* RootViewController.h */,
 				28C286E00D94DF7D0034E888 /* RootViewController.m */,
+				522D1F3E1421BA9900A3AAAF /* ImageViewController.h */,
+				522D1F3F1421BA9900A3AAAF /* ImageViewController.m */,
 				1D3623240D0F684500981E51 /* SumicamAppDelegate.h */,
 				1D3623250D0F684500981E51 /* SumicamAppDelegate.m */,
 			);
@@ -177,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				28F335F01007B36200424DE2 /* RootViewController.xib */,
+				522D1F401421BA9900A3AAAF /* ImageViewController.xib */,
 				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* Sumicam-Info.plist */,
 			);
@@ -306,6 +314,7 @@
 			files = (
 				28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */,
 				28F335F11007B36200424DE2 /* RootViewController.xib in Resources */,
+				522D1F421421BA9900A3AAAF /* ImageViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +349,7 @@
 				52D05131141BC0FC000676CE /* SBJsonTokeniser.m in Sources */,
 				52D05132141BC0FC000676CE /* SBJsonUTF8Stream.m in Sources */,
 				52D05133141BC0FC000676CE /* SBJsonWriter.m in Sources */,
+				522D1F411421BA9900A3AAAF /* ImageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

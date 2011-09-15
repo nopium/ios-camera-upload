@@ -13,7 +13,7 @@
 @interface RootViewController : UITableViewController {
 	ASIHTTPRequest *request;
 	ASINetworkQueue *networkQueue;
-	
+
 	UITableView *tableView;
 	BOOL failed;
 	NSMutableArray *imagesList;
@@ -22,6 +22,7 @@
 - (IBAction)simpleURLFetch:(id)sender;
 
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
+
 @property (retain, nonatomic) ASIHTTPRequest *request;
 @property (retain) NSMutableArray *imagesList;
 @end
