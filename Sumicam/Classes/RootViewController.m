@@ -179,11 +179,11 @@
 //-(void)simpleUrlFetch
 {
 	NSURL *url = [NSURL URLWithString:@"http://www.sumilux.com/mia/?a=fetchImageListJSON"];//[urlField text]
-	
+	NSLog(@"<<<simpleURLFetch>>>");
 	// Create a request
 	// You don't normally need to retain a synchronous request, but we need to in this case because we'll need it later if we reload the table data
 	[self setRequest:[ASIHTTPRequest requestWithURL:url]];
-	
+		NSLog(@">>>simpleURLFetch<<<");
 	
 	// Start the request
 	[request startSynchronous];
@@ -212,17 +212,17 @@
 			// Get name and url of the image
 			NSString *fileName = [file objectForKey:@"fileName"];
 			NSString *fileURL = [[file objectForKey:@"fileURL"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-			NSLog(@"fileURL: %@", fileURL);
+			//NSLog(@"fileURL: %@", fileURL);
 			
 			request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString: fileURL ]];
 			[request setDownloadDestinationPath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: fileName ]];
 			
 			//[request setUserInfo:[NSDictionary dictionaryWithObject:@"request1" forKey:@"name"]];
 			[networkQueue addOperation:request];
-			NSLog(@"added %@", fileURL);
+			//NSLog(@"added %@", fileURL);
 		}
 		[networkQueue go];
-		NSLog(@"networkQueue go");
+		//NSLog(@"networkQueue go");
 	}
 }
 
