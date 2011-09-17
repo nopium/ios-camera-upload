@@ -12,20 +12,25 @@
 #import "SBJson.h"
 #import "ASIHTTPRequest.h"
 #import "ASINetworkQueue.h"
-
+#import "ASIFormDataRequest.h"
 
 // Private stuff
 @interface RootViewController ()
 - (void)imageFetchComplete:(ASIHTTPRequest *)request;
 - (void)imageFetchFailed:(ASIHTTPRequest *)request;
+- (void)presentImagePickerController:(UIImagePickerController *)imagePickerController;
+- (void)uploadFailed:(ASIHTTPRequest *)theRequest;
+- (void)uploadFinished:(ASIHTTPRequest *)theRequest;
 @end
 
 
 @implementation RootViewController
 
 @synthesize request;
+@synthesize requestForm;
 @synthesize tableView;
 @synthesize imagesList;
+
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -34,6 +39,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	imagesList = [[NSMutableArray alloc] init];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
+																							target:self 
+																							action:@selector(addPhoto)] autorelease];	
+	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -246,6 +255,77 @@
 }
 
 #pragma mark -
+#pragma mark Camera
+-(void) addPhoto
+{
+	
+	//UIImagePickerController *imagePickerController;
+	imagePickerController = [[UIImagePickerController alloc] init];
+	imagePickerController.delegate = self;
+	
+	imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+	
+	
+	[self presentImagePickerController:imagePickerController];
+	[imagePickerController release];	
+	
+}
+
+- (void)presentImagePickerController:(UIImagePickerController *)imagePickerController {
+		[self presentModalViewController:imagePickerController animated:YES];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+	UIImage *choosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+	NSLog(@"chosenImage: %@", choosenImage);
+	choosenImage = [choosenImage imageByScalingAndCroppingForSize:CGSizeMake(320, 480)];
+	
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+	
+	NSString *fileName = [[[NSString stringWithFormat:@"photo-%@.jpg", [dateFormatter stringFromDate:[NSDate date]]] stringByReplacingOccurrencesOfString:@" " withString:@"_"] stringByReplacingOccurrencesOfString:@":" withString:@""];
+	NSString *filePath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: fileName ];
+	[dateFormatter release];
+
+	NSData *imageData = UIImageJPEGRepresentation(choosenImage, 0.9);
+	[imageData writeToFile:filePath atomically:NO];
+	NSLog(@"Saved to %@", filePath);
+	[imagesList addObject:filePath];
+
+	NSString *url = @"http://www.sumilux.com/mia/?a=doUpload";
+	ASIFormDataRequest *requestForm = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+	[requestForm setFile:filePath forKey:@"file"];
+	[requestForm setDelegate:self];
+	[requestForm setDidFailSelector:@selector(uploadFailed:)];
+	[requestForm setDidFinishSelector:@selector(uploadFinished:)];
+	NSLog(@"starting upload....");
+	[requestForm startAsynchronous];
+	
+	//[tableView reloadData];
+	//[picker dismissModalViewControllerAnimated:YES];
+
+}
+
+- (void)uploadFailed:(ASIHTTPRequest *)theRequest
+{
+	[imagePickerController dismissModalViewControllerAnimated:YES];
+	NSLog(@"Upload failed: %@",[[theRequest error] localizedDescription]);
+}
+
+- (void)uploadFinished:(ASIHTTPRequest *)theRequest
+{
+	NSLog(@"Upload finished! %llu bytes of data",[theRequest postLength]);
+	[imagePickerController dismissModalViewControllerAnimated:YES];
+	[tableView reloadData];
+}
+
+
+-(void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+	[picker dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark -
 #pragma mark Memory management
 
 - (void)didReceiveMemoryWarning {
@@ -267,9 +347,75 @@
 	[networkQueue release];
 	[tableView release];
 	[imagesList release];
+
+	[request clearDelegatesAndCancel];
 	[request release];
+
+	[requestForm clearDelegatesAndCancel];
+    [requestForm release];
+
     [super dealloc];
 }
 
 @end
 
+@implementation UIImage (Extras) 
+#pragma mark -
+#pragma mark Scale and crop image
+
+- (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize
+{
+	UIImage *sourceImage = self;
+	UIImage *newImage = nil;        
+	CGSize imageSize = sourceImage.size;
+	CGFloat width = imageSize.width;
+	CGFloat height = imageSize.height;
+	CGFloat targetWidth = targetSize.width;
+	CGFloat targetHeight = targetSize.height;
+	CGFloat scaleFactor = 0.0;
+	CGFloat scaledWidth = targetWidth;
+	CGFloat scaledHeight = targetHeight;
+	CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
+	
+	if (CGSizeEqualToSize(imageSize, targetSize) == NO) 
+	{
+        CGFloat widthFactor = targetWidth / width;
+        CGFloat heightFactor = targetHeight / height;
+		
+        if (widthFactor > heightFactor) 
+			scaleFactor = widthFactor; // scale to fit height
+        else
+			scaleFactor = heightFactor; // scale to fit width
+        scaledWidth  = width * scaleFactor;
+        scaledHeight = height * scaleFactor;
+		
+        // center the image
+        if (widthFactor > heightFactor)
+		{
+			thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5; 
+		}
+        else 
+			if (widthFactor < heightFactor)
+			{
+				thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+			}
+	}       
+	
+	UIGraphicsBeginImageContext(targetSize); // this will crop
+	
+	CGRect thumbnailRect = CGRectZero;
+	thumbnailRect.origin = thumbnailPoint;
+	thumbnailRect.size.width  = scaledWidth;
+	thumbnailRect.size.height = scaledHeight;
+	
+	[sourceImage drawInRect:thumbnailRect];
+	
+	newImage = UIGraphicsGetImageFromCurrentImageContext();
+	if(newImage == nil) 
+        NSLog(@"could not scale image");
+	
+	//pop the context to get back to the default
+	UIGraphicsEndImageContext();
+	return newImage;
+}
+@end

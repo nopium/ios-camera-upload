@@ -9,15 +9,17 @@
 #import <UIKit/UIKit.h>
 @class ASIHTTPRequest;
 @class ASINetworkQueue;
+@class ASIFormDataRequest;
 
 @interface RootViewController : UITableViewController {
 	ASIHTTPRequest *request;
+	ASIFormDataRequest *requestForm;
 	ASINetworkQueue *networkQueue;
 
 	UITableView *tableView;
 	BOOL failed;
 	NSMutableArray *imagesList;
-	
+	UIImagePickerController *imagePickerController;
 }
 - (IBAction)simpleURLFetch:(id)sender;
 
@@ -25,4 +27,5 @@
 
 @property (retain, nonatomic) ASIHTTPRequest *request;
 @property (retain) NSMutableArray *imagesList;
+@property (retain, nonatomic) ASIFormDataRequest *requestForm;
 @end
