@@ -43,6 +43,8 @@
 																							target:self 
 																							action:@selector(addPhoto)] autorelease];	
 	
+	//NSArray *dirContents = [[NSFileManager defaultManager] directoryContentsAtPath:зфер];
+	//только contentsOfDirectoryAtPath
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
