@@ -260,7 +260,25 @@
 #pragma mark Camera
 -(void) addPhoto
 {
+	projectAddActionsCameraButton = INT_MAX;
+	projectAddActionsAlbumsButton = INT_MAX;
 	
+	projectAddActions = [[UIActionSheet alloc] initWithTitle:nil 
+													delegate:self 
+										   cancelButtonTitle:nil
+									  destructiveButtonTitle:nil 
+										   otherButtonTitles:nil];
+	if ( [ UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera] ){
+		projectAddActionsCameraButton = [projectAddActions addButtonWithTitle:@"Camera"];
+	}
+	if ( [ UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary] ){
+		projectAddActionsAlbumsButton = [projectAddActions addButtonWithTitle:@"Albums"];
+	}
+	projectAddActions.cancelButtonIndex = [projectAddActions addButtonWithTitle:@"Cancel"];
+	
+	[projectAddActions showInView:self.view];
+	
+	/*
 	//UIImagePickerController *imagePickerController;
 	imagePickerController = [[UIImagePickerController alloc] init];
 	imagePickerController.delegate = self;
@@ -270,6 +288,31 @@
 	
 	[self presentImagePickerController:imagePickerController];
 	[imagePickerController release];	
+	*/
+}
+
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if ( actionSheet == projectAddActions ){
+		if (projectAddActionsCameraButton == buttonIndex || projectAddActionsAlbumsButton == buttonIndex) 
+		{
+			imagePickerController = [[UIImagePickerController alloc] init];
+			imagePickerController.delegate = self;
+			
+			if (projectAddActionsCameraButton == buttonIndex) {
+				imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+			} else {
+				imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+			}
+			
+			[self presentImagePickerController:imagePickerController];
+			[imagePickerController release];	
+			
+		}
+		[projectAddActions release];
+		projectAddActions = nil;
+	}
 	
 }
 

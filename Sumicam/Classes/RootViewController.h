@@ -11,7 +11,7 @@
 @class ASINetworkQueue;
 @class ASIFormDataRequest;
 
-@interface RootViewController : UITableViewController {
+@interface RootViewController : UITableViewController <UIActionSheetDelegate> {
 	ASIHTTPRequest *request;
 	ASIFormDataRequest *requestForm;
 	ASINetworkQueue *networkQueue;
@@ -20,6 +20,10 @@
 	BOOL failed;
 	NSMutableArray *imagesList;
 	UIImagePickerController *imagePickerController;
+	
+	UIActionSheet *projectAddActions;
+	NSInteger projectAddActionsCameraButton;
+	NSInteger projectAddActionsAlbumsButton;
 }
 - (IBAction)simpleURLFetch:(id)sender;
 
