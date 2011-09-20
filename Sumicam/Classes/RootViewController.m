@@ -354,8 +354,9 @@
 
 - (void)uploadFailed:(ASIHTTPRequest *)theRequest
 {
-	[imagePickerController dismissModalViewControllerAnimated:YES];
 	NSLog(@"Upload failed: %@",[[theRequest error] localizedDescription]);
+	[imagePickerController dismissModalViewControllerAnimated:YES];
+
 }
 
 - (void)uploadFinished:(ASIHTTPRequest *)theRequest
