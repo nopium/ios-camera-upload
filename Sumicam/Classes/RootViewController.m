@@ -326,10 +326,12 @@
 	choosenImage = [choosenImage imageByScalingAndCroppingForSize:CGSizeMake(320, 480)];
 	
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterLongStyle];
     [dateFormatter setDateStyle:NSDateFormatterShortStyle];
 	
-	NSString *fileName = [[[NSString stringWithFormat:@"photo-%@.jpg", [dateFormatter stringFromDate:[NSDate date]]] stringByReplacingOccurrencesOfString:@" " withString:@"_"] stringByReplacingOccurrencesOfString:@":" withString:@""];
+	NSLog(@"Date: ", [dateFormatter stringFromDate:[NSDate date]]);
+
+	NSString *fileName = [[[[[NSString stringWithFormat:@"photo-%@.jpg", [dateFormatter stringFromDate:[NSDate date]]] stringByReplacingOccurrencesOfString:@" " withString:@"_"] stringByReplacingOccurrencesOfString:@":" withString:@""] stringByReplacingOccurrencesOfString:@"/" withString:@""] stringByReplacingOccurrencesOfString:@"+" withString:@""];
 	NSString *filePath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: fileName ];
 	[dateFormatter release];
 
@@ -340,7 +342,11 @@
 
 	NSString *url = @"http://www.sumilux.com/mia/?a=doUpload";
 	ASIFormDataRequest *requestForm = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+	NSLog(@"ASIFormDataRequest requestWithURL: %@", requestForm);
+	[requestForm setTimeOutSeconds:30];
+
 	[requestForm setFile:filePath forKey:@"file"];
+	NSLog(@"setFile....");
 	[requestForm setDelegate:self];
 	[requestForm setDidFailSelector:@selector(uploadFailed:)];
 	[requestForm setDidFinishSelector:@selector(uploadFinished:)];
@@ -354,6 +360,7 @@
 
 - (void)uploadFailed:(ASIHTTPRequest *)theRequest
 {
+	
 	NSLog(@"Upload failed: %@",[[theRequest error] localizedDescription]);
 	[imagePickerController dismissModalViewControllerAnimated:YES];
 
