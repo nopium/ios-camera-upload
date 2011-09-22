@@ -43,10 +43,21 @@
 																							target:self 
 																							action:@selector(addPhoto)] autorelease];	
 	
-	//NSArray *dirContents = [[NSFileManager defaultManager] directoryContentsAtPath:зфер];
+	[self refreshDirContents];
+	//NSArray *dirContents = [[NSFileManager defaultManager] directoryContentsAtPath:path];
 	//только contentsOfDirectoryAtPath
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+-(void)refreshDirContents {
+	[imagesList removeAllObjects];
+	NSArray *dirContents = [[NSFileManager defaultManager] directoryContentsAtPath: [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] ];
+	for (int i=0;i< [dirContents count]; i++){
+//		NSLog( @"Dir contents[%d]: %@", i,  );
+		[imagesList addObject:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent: [dirContents objectAtIndex:i] ]];
+		
+	}
 }
 
 
@@ -239,7 +250,8 @@
 
 - (void)imageFetchComplete:(ASIHTTPRequest *)request
 {
-	[imagesList addObject: [request downloadDestinationPath]];
+	//[imagesList addObject: [request downloadDestinationPath]];
+	[self refreshDirContents];
 	NSLog(@"imageFetchComplete: %d %@", [imagesList count], [request downloadDestinationPath] );
 	[tableView reloadData];
 	
@@ -338,15 +350,13 @@
 	NSData *imageData = UIImageJPEGRepresentation(choosenImage, 0.9);
 	[imageData writeToFile:filePath atomically:NO];
 	NSLog(@"Saved to %@", filePath);
-	[imagesList addObject:filePath];
+	//[imagesList addObject:filePath];
 
 	NSString *url = @"http://www.sumilux.com/mia/?a=doUpload";
 	ASIFormDataRequest *requestForm = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
-	NSLog(@"ASIFormDataRequest requestWithURL: %@", requestForm);
 	[requestForm setTimeOutSeconds:30];
 
 	[requestForm setFile:filePath forKey:@"file"];
-	NSLog(@"setFile....");
 	[requestForm setDelegate:self];
 	[requestForm setDidFailSelector:@selector(uploadFailed:)];
 	[requestForm setDidFinishSelector:@selector(uploadFinished:)];
@@ -369,7 +379,9 @@
 - (void)uploadFinished:(ASIHTTPRequest *)theRequest
 {
 	NSLog(@"Upload finished! %llu bytes of data",[theRequest postLength]);
+	
 	[imagePickerController dismissModalViewControllerAnimated:YES];
+	[self refreshDirContents];
 	[tableView reloadData];
 }
 
