@@ -201,12 +201,10 @@
 //-(void)simpleUrlFetch
 {
 	NSURL *url = [NSURL URLWithString:@"http://www.sumilux.com/mia/?a=fetchImageListJSON"];//[urlField text]
-	NSLog(@"<<<simpleURLFetch>>>");
 	// Create a request
 	// You don't normally need to retain a synchronous request, but we need to in this case because we'll need it later if we reload the table data
 	[self setRequest:[ASIHTTPRequest requestWithURL:url]];
-		NSLog(@">>>simpleURLFetch<<<");
-	
+
 	// Start the request
 	[request startSynchronous];
 	
@@ -244,7 +242,12 @@
 			//NSLog(@"added %@", fileURL);
 		}
 		[networkQueue go];
-		//NSLog(@"networkQueue go");
+		
+	}
+	else{
+		NSLog(@"No internet");
+		UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:@"Unable to Fetch Images" message:@"Check your Internet connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
+		[alertView show];
 	}
 }
 
